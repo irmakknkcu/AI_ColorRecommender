@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Studio | AI Room Color Advisor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-gradient"></div>
+    <div class="bg-blob blob-1"></div>
+    <div class="bg-blob blob-2"></div>
+    <div class="bg-blob blob-3"></div>
+    <div class="noise-overlay"></div>
+    
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 40 40" fill="none">
+                        <circle cx="20" cy="20" r="18" stroke="url(#grad1)" stroke-width="2"/>
+                        <circle cx="14" cy="16" r="5" fill="#FF6B6B"/>
+                        <circle cx="26" cy="16" r="5" fill="#4ECDC4"/>
+                        <circle cx="20" cy="26" r="5" fill="#FFE66D"/>
+                        <defs>
+                            <linearGradient id="grad1" x1="0" y1="0" x2="40" y2="40">
+                                <stop offset="0%" stop-color="#FF6B6B"/>
+                                <stop offset="100%" stop-color="#4ECDC4"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <span class="logo-text">Color Studio</span>
+            </div>
+            <p class="tagline">AI-powered room color analysis</p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main">
+            <!-- Upload Section -->
+            <section class="upload-section" id="uploadSection">
+                <div class="upload-card">
+                    <div class="upload-area" id="uploadBox">
+                        <div class="upload-content">
+                            <div class="upload-icon-wrapper">
+                                <div class="upload-icon-bg"></div>
+                                <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/>
+                                    <path d="M12 12v9"/>
+                                    <path d="m8 17 4-5 4 5"/>
+                                </svg>
+                            </div>
+                            <h2>Discover Your Room</h2>
+                            <p>Drag & drop your photo or click to select</p>
+                            <div class="supported-formats">
+                                <span>PNG</span>
+                                <span>JPG</span>
+                                <span>WEBP</span>
+                            </div>
+                        </div>
+                        <input type="file" id="imageInput" accept="image/*" hidden>
+                    </div>
+                    
+                    <div class="preview-area" id="previewContainer" style="display: none;">
+                        <img id="previewImage" src="" alt="Preview">
+                        <button class="btn-clear" onclick="clearPreview()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <button class="btn-analyze" id="analyzeBtn" onclick="analyzeImage()" style="display: none;">
+                        <span class="btn-text">Analyze Colors</span>
+                        <span class="btn-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M12 16v-4"/>
+                                <path d="M12 8h.01"/>
+                            </svg>
+                        </span>
+                    </button>
+                </div>
+                
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <div class="feature-icon" style="--accent: #FF6B6B;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <circle cx="12" cy="12" r="10"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                        </div>
+                        <span>Color Detection</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon" style="--accent: #4ECDC4;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                            </svg>
+                        </div>
+                        <span>Paint Suggestions</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon" style="--accent: #FFE66D;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                            </svg>
+                        </div>
+                        <span>Decor Tips</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Loading Section -->
+            <section class="loading-section" id="loadingSection" style="display: none;">
+                <div class="loader-card">
+                    <div class="loader-ring">
+                        <div class="loader-ring-inner"></div>
+                    </div>
+                    <h3>Analyzing</h3>
+                    <p>AI is creating your color palette...</p>
+                    <div class="loader-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section class="results-section" id="resultsSection" style="display: none;">
+                <div class="results-header">
+                    <h2>Analysis Results</h2>
+                    <button class="btn-new" onclick="resetApp()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 5v14M5 12h14"/>
+                        </svg>
+                        New Analysis
+                    </button>
+                </div>
+                
+                <div class="results-grid">
+                    <!-- Image Card -->
+                    <div class="result-card image-card">
+                        <img id="resultImage" src="" alt="Analyzed Room">
+                    </div>
+                    
+                    <!-- Dominant Colors Card -->
+                    <div class="result-card colors-card">
+                        <div class="card-header">
+                            <h3>🎨 Detected Colors</h3>
+                        </div>
+                        <div class="dominant-colors" id="colorPalette"></div>
+                    </div>
+                    
+                    <!-- Wall Colors Card -->
+                    <div class="result-card wall-card" id="wallColorsCard" style="display: none;">
+                        <div class="card-header">
+                            <h3>🖌️ Wall Paint Suggestions</h3>
+                        </div>
+                        <div class="wall-colors-list" id="wallColorsList"></div>
+                    </div>
+                    
+                    <!-- Tips Card -->
+                    <div class="result-card tips-card" id="tipsCard" style="display: none;">
+                        <div class="card-header">
+                            <h3>💡 Decoration Tips</h3>
+                        </div>
+                        <div class="tips-list" id="tipsList"></div>
+                    </div>
+                    
+                    <!-- Furniture Card -->
+                    <div class="result-card furniture-card" id="furnitureCard" style="display: none;">
+                        <div class="card-header">
+                            <h3>🪑 Furniture Suggestions</h3>
+                        </div>
+                        <div class="furniture-list" id="furnitureList"></div>
+                    </div>
+                    
+                    <!-- Accessories Card -->
+                    <div class="result-card accessories-card" id="accessoriesCard" style="display: none;">
+                        <div class="card-header">
+                            <h3>✨ Accessory Suggestions</h3>
+                        </div>
+                        <div class="accessories-list" id="accessoriesList"></div>
+                    </div>
+                    
+                    <!-- Harmony Card -->
+                    <div class="result-card harmony-card" id="harmonyCard" style="display: none;">
+                        <div class="card-header">
+                            <h3>🌈 Color Harmony</h3>
+                        </div>
+                        <p class="harmony-text" id="harmonyText"></p>
+                    </div>
+                    
+                    <!-- Summary Card -->
+                    <div class="result-card summary-card" id="summaryCard" style="display: none;">
+                        <div class="card-header">
+                            <h3>📋 Summary</h3>
+                        </div>
+                        <p class="summary-text" id="summaryText"></p>
+                    </div>
+                </div>
+                
+                <!-- Fallback -->
+                <div class="fallback-analysis" id="fallbackAnalysis" style="display: none;">
+                    <div class="card-header">
+                        <h3>Detailed Analysis</h3>
+                    </div>
+                    <div class="analysis-content" id="analysisContent"></div>
+                </div>
+            </section>
+
+            <!-- Error Section -->
+            <section class="error-section" id="errorSection" style="display: none;">
+                <div class="error-card">
+                    <div class="error-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 8v4M12 16h.01"/>
+                        </svg>
+                    </div>
+                    <h3>Something Went Wrong</h3>
+                    <p id="errorMessage"></p>
+                    <button class="btn-retry" onclick="resetApp()">Try Again</button>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Powered by <span>Google Gemini AI</span></p>
+        </footer>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
