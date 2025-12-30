@@ -47,6 +47,7 @@ function displayPreview(file) {
         previewContainer.style.display = 'block';
         analyzeBtn.style.display = 'flex';
         uploadBox.querySelector('.upload-content').style.display = 'none';
+        uploadBox.querySelector('.upload-content-selected').style.display = 'flex';
     };
     reader.readAsDataURL(file);
 }
@@ -58,6 +59,7 @@ function clearPreview() {
     analyzeBtn.style.display = 'none';
     imageInput.value = '';
     uploadBox.querySelector('.upload-content').style.display = 'block';
+    uploadBox.querySelector('.upload-content-selected').style.display = 'none';
 }
 
 // Analyze Image
